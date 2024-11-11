@@ -5,7 +5,7 @@ import contactUs from "../Images/contactUs.jpg";
 
 const Contact = () => {
     return (
-        <Layout>
+        <Layout title={"Contact Us - Astral Time"}>
             <div className="contact-container row">
                 <div className="col-md-6">
                     <img src={contactUs} alt="Contact Us" className="contact-image" />

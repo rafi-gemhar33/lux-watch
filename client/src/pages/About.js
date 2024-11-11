@@ -4,7 +4,7 @@ import aboutImage from "../Images/aboutImage.jpg";
 
 const About = () => {
     return (
-        <Layout>
+        <Layout title={"About Us - Astral Time"}>
             <div className="about-container">
                 <h1 className="about-title">About Us</h1>
                 <div className="about-content">
