@@ -5,7 +5,7 @@ import contactUs from "../Images/contactUs.jpg";
 
 const Contact = () => {
     return (
-        <Layout title={"Contact Us - Astral Time"}>
+        <Layout title={"Contact Us - Lux-Watch"}>
             <div className="contact-container row">
                 <div className="col-md-6">
                     <img src={contactUs} alt="Contact Us" className="contact-image" />
@@ -16,7 +16,7 @@ const Contact = () => {
                         Should you have any inquiries or require further information, please don't hesitate to contact us. Our team is available 24/7 to assist you.
                     </p>
                     <p className="contact-info">
-                        <BiMailSend /> : <a href="mailto:www.help@ecommerceapp.com">www.help@ecommerceapp.com</a>
+                        <BiMailSend /> : <a href="mailto:customersupport@luxwatch.com">customersupport@luxwatch.com</a>
                     </p>
                     <p className="contact-info">
                         <BiPhoneCall /> : (107) 123-9909

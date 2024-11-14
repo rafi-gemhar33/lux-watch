@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout/Layout.js';
 const Policy = () => {
     return (
-        <Layout title={"Privacy Policy - Astral Time"}>
+        <Layout title={"Privacy Policy - Lux-watch"}>
             <div className="policy-container">
                 <h1 className="policy-title">Our Policy</h1>
                 <section className="policy-section">
