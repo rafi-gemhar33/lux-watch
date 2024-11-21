@@ -6,7 +6,7 @@ PLAN:
 
 ## Project updates:
 
-### Completed so far:
+### Completed so far(Merged to main):
   - Setting up an E-Commerce MERN app project
   - Configuring the MERN app server and dotenv
   - Connecting Node js to MongoDB
@@ -22,11 +22,14 @@ PLAN:
   - Setting up private routes, location history, and redirects
   - Implementing forgot password and role-based login
 
-Currently working:
+Currently working:(committed)
  - Creating admin and user panels
 
-### To do:
+Currently working:(started)
  - Category API CRUD operations
+
+
+### To do:
  - Products API CRUD with image uploads
  - React-based category CRUD operations
  - Creating a product form in the admin panel
