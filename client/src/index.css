@@ -390,13 +390,11 @@
 }
 
 .register h1 {
-  text-align: center;
-  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
   color: #333;
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .form-label {
@@ -486,4 +484,21 @@
 
 .login-button:hover {
   background-color: #0056b3;
+}
+
+
+/*---------------FORGOT PASSWORD LINK--------------------*/
+
+.forgot-password-link {
+  display: block;            
+  text-align: center;       
+  margin-top: 15px;          
+  margin-bottom: 20px;      
+  color: #f20000;            
+  text-decoration: none;     
+  font-weight: 500;          
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline; 
 }
