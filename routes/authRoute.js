@@ -4,9 +4,12 @@ import {
   loginController,
   testController,
   forgotPasswordController,
+  updateProfileController,
+  getOrdersController,
+  getAllOrdersController,
+  orderStatusController,
 } from "../controllers/authController.js";
-import { requireSignIn } from "../middleswares/authMiddleware.js";
-import { isAdmin } from "../middleswares/authMiddleware.js";
+import { isAdmin, requireSignIn } from "../middleswares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -19,12 +22,28 @@ router.post("/forgot-password", forgotPasswordController);
 //testing routes
 router.get("/test", requireSignIn, isAdmin, testController);
 //Protected route Auth
-router.get("/user-Auth", requireSignIn, (req, res) => {
+router.get("/user-auth", requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
 });
-
 router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true });
 });
+
+//update profile
+router.put("/profile", requireSignIn, updateProfileController);
+
+//orders
+router.get("/orders", requireSignIn, getOrdersController);
+
+//all orders
+router.get("/all-orders", requireSignIn, isAdmin, getAllOrdersController);
+
+// order status update
+router.put(
+  "/order-status/:orderId",
+  requireSignIn,
+  isAdmin,
+  orderStatusController
+);
 
 export default router;
