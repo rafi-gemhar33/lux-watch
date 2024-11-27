@@ -503,3 +503,122 @@
   text-decoration: underline; 
 }
 
+
+
+/*--------------------------------CREATE CATEGORY---------------*/
+
+/* Custom styles for the table and buttons */
+.ant-table-thead > tr > th {
+  background-color: #f0f2f5;
+  color: #1890ff;
+  font-weight: bold;
+}
+
+.ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  margin-right: 8px;
+}
+
+.ant-btn-danger {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.ant-popconfirm-inner {
+  font-size: 14px;
+}
+
+/* Modal Styling */
+.ant-modal-content {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/*--------------------------------CREATE PRODUCT---------------*/
+
+.product-form-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.upload-label {
+  cursor: pointer;
+  text-align: center;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+.upload-label:hover {
+  border-color: #333;
+}
+
+.product-form img {
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/*---------------------------PRODUCT PAGE------------------------------*/
+
+.product-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/*------------------------ADMIN PANEL------------------------------*/
+
+/* AdminMenu.css */
+
+.admin-menu-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  margin: 20px auto;
+  max-width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-menu {
+  border-radius: 15px;
+}
+
+.admin-menu .ant-menu-item {
+  font-size: 18px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+.admin-menu .ant-menu-item:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.admin-menu-link {
+  color: #000000 !important;
+  text-decoration: none;
+}
+
+.admin-menu-link:hover {
+  color: #1890ff !important;
+  text-decoration: none;
+}

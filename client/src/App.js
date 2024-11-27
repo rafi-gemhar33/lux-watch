@@ -12,14 +12,15 @@ import Dashboard from "./pages/User/Dashboard";
 import PrivateRoute from "./components/Routes/Private";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 
-
 import AdminRoute from "./components/Routes/AdminRoute";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import CreateCategory from "./pages/Admin/CreateCategory";
 import CreateProduct from "./pages/Admin/CreateProduct";
+import UpdateProduct from "./pages/Admin/UpdateProduct";
 import Users from "./pages/Admin/Users";
 import Orders from "./pages/User/Orders";
 import Profile from "./pages/User/Profile";
+import Products from "./pages/Admin/Product";
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
+          <Route path="admin/product/:slug" element={<UpdateProduct />} />
+          <Route path="admin/products" element={<Products />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
         <Route path="/register" element={<Register />} />

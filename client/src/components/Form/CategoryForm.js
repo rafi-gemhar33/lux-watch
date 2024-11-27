@@ -7,7 +7,7 @@ const CategoryForm = ({ handleSubmit, value, setValue }) => {
         <div className="mb-3">
           <input
             type="text"
-            className="form-control"
+            className="form-control w-75" // Adjust the width with w-75 (or use other classes like w-50, w-25, etc.)
             placeholder="Enter new category"
             value={value}
             onChange={(e) => setValue(e.target.value)}
