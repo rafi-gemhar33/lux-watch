@@ -3,12 +3,15 @@ import Layout from "./../components/Layout/Layout";
 import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
+import { Button } from "antd";
+import { Container, Row, Col, Card } from "react-bootstrap";
+
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
 
-  //total price
+  // Total price calculation
   const totalPrice = () => {
     try {
       let total = 0;
@@ -23,7 +26,8 @@ const CartPage = () => {
       console.log(error);
     }
   };
-  //detele item
+
+  // Remove item from cart
   const removeCartItem = (pid) => {
     try {
       let myCart = [...cart];
@@ -35,94 +39,119 @@ const CartPage = () => {
       console.log(error);
     }
   };
+
   return (
     <Layout>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <h1 className="text-center bg-light p-2 mb-1">
-              {`Hello ${auth?.token && auth?.user?.name}`}
-            </h1>
-            <h4 className="text-center">
+      <Container className="cart-page mt-4">
+        {/* Header */}
+        <Row className="text-center mb-4">
+          <Col>
+            <h2>{`Hello ${auth?.token && auth?.user?.name} 👋`}</h2>
+            <p className="text-muted">
               {cart?.length
-                ? `You Have ${cart.length} items in your cart ${
-                    auth?.token ? "" : "please login to checkout"
+                ? `You have ${cart.length} item${
+                    cart.length > 1 ? "s" : ""
+                  } in your cart ${
+                    auth?.token ? "" : "please log in to checkout"
                   }`
-                : " Your Cart Is Empty"}
-            </h4>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8">
+                : "Your cart is empty"}
+            </p>
+          </Col>
+        </Row>
+
+        <Row>
+          {/* Cart Items */}
+          <Col md={8}>
             {cart?.map((p) => (
-              <div className="row mb-2 p-3 card flex-row">
-                <div className="col-md-4">
-                  <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    className="card-img-top"
-                    alt={p.name}
-                    width="100px"
-                    height={"100px"}
-                  />
-                </div>
-                <div className="col-md-8">
-                  <p>{p.name}</p>
-                  <p>{p.description.substring(0, 30)}</p>
-                  <p>Price : {p.price}</p>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => removeCartItem(p._id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
+              <Card key={p._id} className="mb-3">
+                <Row>
+                  <Col md={4}>
+                    <Card.Img
+                      variant="top"
+                      src={`/api/v1/product/product-photo/${p._id}`}
+                      className="img-fluid rounded"
+                    />
+                  </Col>
+                  <Col md={8}>
+                    <Card.Body>
+                      <Card.Title>{p.name}</Card.Title>
+                      <Card.Text>
+                        {p.description.substring(0, 100)}...
+                      </Card.Text>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="mb-0">${p.price}</h5>
+                        <Button
+                          type="danger"
+                          onClick={() => removeCartItem(p._id)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Col>
+                </Row>
+              </Card>
             ))}
-          </div>
-          <div className="col-md-4 text-center">
-            <h2>Cart Summary</h2>
-            <p>Total | Checkout | Payment</p>
-            <hr />
-            <h4>Total : {totalPrice()} </h4>
-            {auth?.user?.address ? (
-              <>
-                <div className="mb-3">
-                  <h4>Current Address</h4>
-                  <h5>{auth?.user?.address}</h5>
-                  <button
-                    className="btn btn-outline-warning"
-                    onClick={() => navigate("/dashboard/user/profile")}
-                  >
-                    Update Address
-                  </button>
+          </Col>
+
+          {/* Cart Summary */}
+          <Col md={4}>
+            <Card>
+              <Card.Header as="h5">Cart Summary</Card.Header>
+              <Card.Body>
+                <div className="text-center">
+                  <h3 className="mb-4">Total: {totalPrice()}</h3>
+
+                  {auth?.user?.address ? (
+                    <div>
+                      <h5>Shipping Address</h5>
+                      <p className="text-muted">{auth?.user?.address}</p>
+                      <Button
+                        type="link"
+                        onClick={() => navigate("/dashboard/user/profile")}
+                      >
+                        Update Address
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      {auth?.token ? (
+                        <Button
+                          variant="primary"
+                          onClick={() => navigate("/dashboard/user/profile")}
+                        >
+                          Add Shipping Address
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="primary"
+                          onClick={() =>
+                            navigate("/login", {
+                              state: "/cart",
+                            })
+                          }
+                        >
+                          Login to Checkout
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </>
-            ) : (
-              <div className="mb-3">
-                {auth?.token ? (
-                  <button
-                    className="btn btn-outline-warning"
-                    onClick={() => navigate("/dashboard/user/profile")}
-                  >
-                    Update Address
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-outline-warning"
-                    onClick={() =>
-                      navigate("/login", {
-                        state: "/cart",
-                      })
-                    }
-                  >
-                    Plase Login to checkout
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+              </Card.Body>
+              <Card.Footer>
+                <Button
+                  type="primary"
+                  block
+                  disabled={cart?.length === 0}
+                  onClick={() => navigate("/checkout")}
+                >
+                  Proceed to Checkout
+                </Button>
+              </Card.Footer>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </Layout>
   );
 };
