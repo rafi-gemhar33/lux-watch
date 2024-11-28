@@ -703,6 +703,10 @@ body {
   text-decoration: none;
 }
 
+.ant-menu-vertical {
+  border-inline-end: none !important;
+}
+
 
 
 

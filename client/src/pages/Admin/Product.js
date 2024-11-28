@@ -52,44 +52,46 @@ const Products = () => {
                 <Spin size="large" />
               </div>
             ) : (
-              <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 {products?.map((p) => (
                   <div key={p._id} className="col mb-4">
-                    <Link
-                      to={`/dashboard/admin/product/${p.slug}`}
-                      className="text-decoration-none"
-                    >
-                      <Card
-                        hoverable
-                        cover={
+                    <Card
+                      hoverable
+                      cover={
+                        <Link to={`/dashboard/admin/product/${p.slug}`}>
                           <img
                             alt={p.name}
                             src={`/api/v1/product/product-photo/${p._id}`}
-                            style={{ objectFit: "cover", height: "200px" }}
+                            style={{ objectFit: "cover", height: "200px", width: "100%" }}
                           />
+                        </Link>
+                      }
+                      className="product-card"
+                      bordered={false}
+                      style={{
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        position: "relative",
+                      }}
+                    >
+                      <EditOutlined
+                        onClick={() =>
+                          (window.location.href = `/dashboard/admin/product/${p.slug}`)
                         }
-                        className="product-card"
-                        bordered={false}
                         style={{
-                          borderRadius: "10px",
-                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                          position: "relative",
+                          position: "absolute",
+                          top: "10px",
+                          right: "10px",
+                          fontSize: "20px",
+                          color: "#1890ff", // Blue color
+                          cursor: "pointer",
+                          zIndex: 1,
                         }}
+                      />
+                      <Link
+                        to={`/dashboard/admin/product/${p.slug}`}
+                        className="text-decoration-none"
                       >
-                        <EditOutlined
-                          onClick={() =>
-                            (window.location.href = `/dashboard/admin/product/edit/${p._id}`)
-                          }
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            fontSize: "20px",
-                            color: "#1890ff", // Blue color
-                            cursor: "pointer",
-                            zIndex: 1,
-                          }}
-                        />
                         <Meta
                           title={p.name}
                           description={
@@ -101,8 +103,8 @@ const Products = () => {
                             </p>
                           }
                         />
-                      </Card>
-                    </Link>
+                      </Link>
+                    </Card>
                   </div>
                 ))}
               </div>
