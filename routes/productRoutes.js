@@ -4,11 +4,14 @@ import {
   deleteProductController,
   getProductController,
   getSingleProductController,
-  productPhotoController,
-  updateProductController,
+  productCategoryController,
   productCountController,
   productFiltersController,
   productListController,
+  productPhotoController,
+  realtedProductController,
+  searchProductController,
+  updateProductController,
 } from "../controllers/productController.js";
 import { isAdmin, requireSignIn } from "../middleswares/authMiddleware.js";
 import formidable from "express-formidable";
@@ -52,5 +55,14 @@ router.get("/product-count", productCountController);
 
 //product per page
 router.get("/product-list/:page", productListController);
+
+//search product
+router.get("/search/:keyword", searchProductController);
+
+//similar product
+router.get("/related-product/:pid/:cid", realtedProductController);
+
+//category wise product
+router.get("/product-category/:slug", productCategoryController);
 
 export default router;

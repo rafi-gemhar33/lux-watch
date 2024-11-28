@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Layout from "./../components/Layout/Layout";
-
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Checkbox, Radio } from "antd";
+import { Checkbox, Radio, Button } from "antd"; // Import Button from Ant Design
 import { Prices } from "../components/Prices";
+import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons"; // Import the cart icon
+
 const HomePage = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -13,7 +16,7 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  //get all cat
+  // Get all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
@@ -29,7 +32,8 @@ const HomePage = () => {
     getAllCategory();
     getTotal();
   }, []);
-  //get products
+
+  // Get products
   const getAllProducts = async () => {
     try {
       setLoading(true);
@@ -42,7 +46,7 @@ const HomePage = () => {
     }
   };
 
-  //getTOtal COunt
+  // Get total count
   const getTotal = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/product-count");
@@ -56,7 +60,8 @@ const HomePage = () => {
     if (page === 1) return;
     loadMore();
   }, [page]);
-  //load more
+
+  // Load more products
   const loadMore = async () => {
     try {
       setLoading(true);
@@ -69,7 +74,7 @@ const HomePage = () => {
     }
   };
 
-  // filter by cat
+  // Filter by category
   const handleFilter = (value, id) => {
     let all = [...checked];
     if (value) {
@@ -79,6 +84,7 @@ const HomePage = () => {
     }
     setChecked(all);
   };
+
   useEffect(() => {
     if (!checked.length || !radio.length) getAllProducts();
   }, [checked.length, radio.length]);
@@ -87,7 +93,7 @@ const HomePage = () => {
     if (checked.length || radio.length) filterProduct();
   }, [checked, radio]);
 
-  //get filterd product
+  // Get filtered products
   const filterProduct = async () => {
     try {
       const { data } = await axios.post("/api/v1/product/product-filters", {
@@ -99,12 +105,13 @@ const HomePage = () => {
       console.log(error);
     }
   };
+
   return (
-    <Layout title={"ALl Products - Best offers "}>
-      <div className="container-fluid row mt-3">
-        <div className="col-md-2">
-          <h4 className="text-center">Filter By Category</h4>
-          <div className="d-flex flex-column">
+    <Layout title={"All Products - Best Offers"}>
+      <div className="home-container">
+        <div className="filter-sidebar">
+          <h4 className="filter-title">Filter By Category</h4>
+          <div className="filter-category">
             {categories?.map((c) => (
               <Checkbox
                 key={c._id}
@@ -114,61 +121,74 @@ const HomePage = () => {
               </Checkbox>
             ))}
           </div>
-          {/* price filter */}
-          <h4 className="text-center mt-4">Filter By Price</h4>
-          <div className="d-flex flex-column">
-            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-              {Prices?.map((p) => (
-                <div key={p._id}>
-                  <Radio value={p.array}>{p.name}</Radio>
-                </div>
-              ))}
-            </Radio.Group>
-          </div>
-          <div className="d-flex flex-column">
-            <button
-              className="btn btn-danger"
-              onClick={() => window.location.reload()}
-            >
-              RESET FILTERS
-            </button>
-          </div>
+          <h4 className="filter-title mt-4">Filter By Price</h4>
+          <Radio.Group
+            onChange={(e) => setRadio(e.target.value)}
+            className="filter-price"
+          >
+            {Prices?.map((p) => (
+              <Radio key={p._id} value={p.array}>
+                {p.name}
+              </Radio>
+            ))}
+          </Radio.Group>
+          <button
+            className="btn-reset"
+            onClick={() => window.location.reload()}
+          >
+            RESET FILTERS
+          </button>
         </div>
-        <div className="col-md-9">
+
+        <div className="product-list">
           <h1 className="text-center">All Products</h1>
-          <div className="d-flex flex-wrap">
+          <div className="product-cards">
             {products?.map((p) => (
-              <div className="card m-2" style={{ width: "18rem" }}>
+              <div className="product-card" key={p._id}>
                 <img
                   src={`/api/v1/product/product-photo/${p._id}`}
-                  className="card-img-top"
                   alt={p.name}
+                  className="product-image"
                 />
-                <div className="card-body">
-                  <h5 className="card-title">{p.name}</h5>
-                  <p className="card-text">
+                <div className="product-body">
+                  <h5 className="product-title">{p.name}</h5>
+                  <p className="product-description">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text"> $ {p.price}</p>
-                  <button class="btn btn-primary ms-1">More Details</button>
-                  <button class="btn btn-secondary ms-1">ADD TO CART</button>
+                  <p className="product-price">${p.price}</p>
+                  <div className="product-buttons">
+                    {/* Ant Design Button for "More Details" */}
+                    <Button
+                      icon={<PlusOutlined />}
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    >
+                      More Details
+                    </Button>
+                    {/* Ant Design Add to Cart Button with Icon */}
+                    <Button
+                      icon={<ShoppingCartOutlined />}
+                      type="primary"
+                      className="btn-add-to-cart"
+                    >
+                      Add to Cart
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="m-2 p-3">
-            {products && products.length < total && (
+
+          {products && products.length < total && (
+            <div className="load-more">
               <button
-                className="btn btn-warning"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(page + 1);
-                }}
+                className="btn-loadmore"
+                onClick={() => setPage(page + 1)}
+                disabled={loading}
               >
-                {loading ? "Loading ..." : "Loadmore"}
+                {loading ? "Loading ..." : "Load More"}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
