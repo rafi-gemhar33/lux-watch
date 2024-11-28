@@ -3,10 +3,13 @@ import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { toast } from "sonner";
 import useCategory from "../../hooks/useCategory";
+import { useCart } from "../../context/cart";
+import { Badge } from "antd";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
   const categories = useCategory();
+  const [cart] = useCart();
 
   const handleLogout = () => {
     setAuth({
@@ -78,9 +81,13 @@ const Header = () => {
             </div>
           )}
 
-          <NavLink to="/cart" className="nav-link">
-            Cart (0)
-          </NavLink>
+          <li className="nav-item">
+            <Badge count={cart?.length} showZero>
+              <NavLink to="/cart" className="nav-link">
+                Cart
+              </NavLink>
+            </Badge>
+          </li>
         </nav>
       </div>
     </header>

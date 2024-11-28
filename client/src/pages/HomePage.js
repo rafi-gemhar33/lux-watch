@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import Layout from "./../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Checkbox, Radio, Button } from "antd"; // Import Button from Ant Design
+import { Checkbox, Radio, Button } from "antd";
 import { Prices } from "../components/Prices";
-import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons"; // Import the cart icon
+import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons";
+import { useCart } from "../context/cart.js";
+import { toast } from "sonner";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [cart, setCart] = useCart();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -169,6 +172,14 @@ const HomePage = () => {
                       icon={<ShoppingCartOutlined />}
                       type="primary"
                       className="btn-add-to-cart"
+                      onClick={() => {
+                        setCart([...cart, p]);
+                        localStorage.setItem(
+                          "cart",
+                          JSON.stringify([...cart, p])
+                        );
+                        toast.success("Item Added to cart");
+                      }}
                     >
                       Add to Cart
                     </Button>
