@@ -7,6 +7,9 @@ import { Prices } from "../components/Prices";
 import { ShoppingCartOutlined, PlusOutlined } from "@ant-design/icons";
 import { useCart } from "../context/cart.js";
 import { toast } from "sonner";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -144,7 +147,10 @@ const HomePage = () => {
         </div>
 
         <div className="product-list">
-          <h1 className="text-center">All Products</h1>
+          <Title level={2} style={{ textAlign: "left", color: "#f39c12" }}>
+            ALL PRODUCTS
+          </Title>
+
           <div className="product-cards">
             {products?.map((p) => (
               <div className="product-card" key={p._id}>

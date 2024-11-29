@@ -6,6 +6,7 @@ import {
   PlusCircleOutlined,
   UserOutlined,
   UnorderedListOutlined,
+  ShoppingOutlined,
 } from "@ant-design/icons";
 
 const AdminMenu = () => {
@@ -31,6 +32,11 @@ const AdminMenu = () => {
         <Menu.Item key="products" icon={<UnorderedListOutlined />}>
           <NavLink to="/dashboard/admin/products" className="admin-menu-link">
             Products
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key="orders" icon={<ShoppingOutlined />}>
+          <NavLink to="/dashboard/admin/orders" className="admin-menu-link">
+            Orders
           </NavLink>
         </Menu.Item>
         <Menu.Item key="users" icon={<UserOutlined />}>
