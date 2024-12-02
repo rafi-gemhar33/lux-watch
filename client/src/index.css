@@ -930,3 +930,37 @@ body {
     padding: 15px;
   }
 }
+
+
+
+/*------------------------PRODUCT DETAILS CSS OVERERIDE--------------------------------*/
+
+.ant-card-hoverable {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+}
+
+
+.text-2xl{
+  margin-top: 30px;
+  font-size: 25px;
+
+}
+
+.btn-loadmore{
+  margin-bottom: 30px;
+}
+
+.containerh{
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 50px;
+}
+
+.heading {
+  font-size: 30px;
+  font-weight: bold; /* To make it bold */
+  text-align: center; /* To align the heading to the center */
+}
+

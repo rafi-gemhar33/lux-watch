@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import Layout from "./../components/Layout/Layout";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { Button, Card } from "antd";
+
 const ProductDetails = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  //initalp details
+  // Fetch product details
   useEffect(() => {
     if (params?.slug) getProduct();
   }, [params?.slug]);
-  //getProduct
+
+  // Get product details
   const getProduct = async () => {
     try {
       const { data } = await axios.get(
@@ -24,7 +27,8 @@ const ProductDetails = () => {
       console.log(error);
     }
   };
-  //get similar product
+
+  // Get similar products
   const getSimilarProduct = async (pid, cid) => {
     try {
       const { data } = await axios.get(
@@ -35,55 +39,108 @@ const ProductDetails = () => {
       console.log(error);
     }
   };
+
   return (
     <Layout>
-      <div className="row container mt-2">
-        <div className="col-md-6">
-          <img
-            src={`/api/v1/product/product-photo/${product._id}`}
-            className="card-img-top"
-            alt={product.name}
-            height="300"
-            width={"350px"}
-          />
-        </div>
-        <div className="col-md-6 ">
-          <h1 className="text-center">Product Details</h1>
-          <h6>Name : {product.name}</h6>
-          <h6>Description : {product.description}</h6>
-          <h6>Price : {product.price}</h6>
-          <h6>Category : {product?.category?.name}</h6>
-          <button class="btn btn-secondary ms-1">ADD TO CART</button>
-        </div>
-      </div>
-      <hr />
-      <div className="row container">
-        <h6>Similar Products</h6>
-        {relatedProducts.length < 1 && (
-          <p className="text-center">No Similar Products found</p>
-        )}
-        <div className="d-flex flex-wrap">
-          {relatedProducts?.map((p) => (
-            <div className="card m-2" style={{ width: "18rem" }}>
-              <img
-                src={`/api/v1/product/product-photo/${p?._id}`}
-                className="card-img-top"
-                alt={p.name}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{p.name}</h5>
-                <p className="card-text">{p.description.substring(0, 30)}...</p>
-                <p className="card-text"> $ {p.price}</p>
-                <button
-                  className="btn btn-primary ms-1"
-                  onClick={() => navigate(`/product/${p.slug}`)}
-                >
-                  More Details
-                </button>
-                <button class="btn btn-secondary ms-1">ADD TO CART</button>
-              </div>
+      <div className="container mx-auto px-4 py-12">
+        {/* Product Details Section */}
+        <div className="bg-gradient-to-br from-gray-100 to-white shadow-xl rounded-lg p-10 mb-12 flex flex-col md:flex-row gap-8">
+          {/* Product Image */}
+          <div className="flex-1 flex justify-center items-center">
+            <img
+              src={`/api/v1/product/product-photo/${product._id}`}
+              alt={product.name}
+              className="rounded-lg max-w-[500px] object-cover shadow-lg"
+            />
+          </div>
+
+          {/* Product Details */}
+          <div className="flex-1 flex flex-col justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-6">
+                {product.name}
+              </h1>
+              <p className="text-lg text-gray-600 mb-4">
+                {product.description}
+              </p>
+              <p className="text-3xl font-semibold text-blue-600 mb-4">
+                Price: ${product.price}
+              </p>
+              <p className="text-lg text-gray-600">
+                Category:{" "}
+                <span className="font-medium text-gray-800">
+                  {product?.category?.name}
+                </span>
+              </p>
             </div>
-          ))}
+            <div className="flex gap-4 mt-8">
+              <Button type="primary" size="large" className="rounded-lg">
+                Add to Cart
+              </Button>
+              <Button
+                type="default"
+                size="large"
+                className="rounded-lg"
+                onClick={() => navigate("/")}
+              >
+                Go Back
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Similar Products Section */}
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+            You May Also Like...
+          </h2>
+          {relatedProducts.length < 1 && (
+            <p className="text-center text-gray-500">
+              No Similar Products Found
+            </p>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {relatedProducts?.map((p) => (
+              <Card
+                key={p._id}
+                hoverable
+                className="shadow-md transform hover:scale-105 transition-all duration-300 rounded-lg"
+                cover={
+                  <img
+                    src={`/api/v1/product/product-photo/${p?._id}`}
+                    alt={p.name}
+                    className="rounded-t-lg object-cover h-48"
+                  />
+                }
+              >
+                <Card.Meta
+                  title={
+                    <span className="text-lg font-semibold text-gray-800">
+                      {p.name}
+                    </span>
+                  }
+                  description={
+                    <span className="text-sm text-gray-500">
+                      {p.description.substring(0, 40)}...
+                    </span>
+                  }
+                />
+                <p className="text-blue-600 font-bold mt-4">${p.price}</p>
+                <div className="flex justify-between items-center mt-4">
+                  <Button
+                    type="link"
+                    className="text-blue-600"
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                  >
+                    View Details
+                  </Button>
+                  <Button type="default" className="rounded-lg">
+                    Add to Cart
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </Layout>
