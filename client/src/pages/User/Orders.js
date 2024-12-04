@@ -50,8 +50,8 @@ const Orders = () => {
       title: "Payment",
       dataIndex: ["payment", "success"],
       render: (success) => (
-        <Tag color={success ? "red" : "green"}>
-          {success ? "Failed" : "Success"}
+        <Tag color={success ? "green" : "red"}>
+          {success ? "Success" : "Failed"}
         </Tag>
       ),
     },

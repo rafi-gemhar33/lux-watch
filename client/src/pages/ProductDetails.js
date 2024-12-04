@@ -42,15 +42,16 @@ const ProductDetails = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-12">
+      <div className="container align-start mx-auto px-4 py-12">
         {/* Product Details Section */}
-        <div className="bg-gradient-to-br from-gray-100 to-white shadow-xl rounded-lg p-10 mb-12 flex flex-col md:flex-row gap-8">
+        <div className="bg-gradient-to-br from-gray-100 to-white shadow-xl rounded-lg p-10 mb-12 flex flex-col md:flex-row gap-8 padding-right-40">
           {/* Product Image */}
-          <div className="flex-1 flex justify-center items-center">
+          <div className="flex margin-30 pt-6 flex-1 flex justify-center items-center ">
             <img
+              
               src={`/api/v1/product/product-photo/${product._id}`}
               alt={product.name}
-              className="rounded-lg max-w-[500px] object-cover shadow-lg"
+              className="max-height-prod rounded-lg max-w-[500px] object-cover shadow-lg"
             />
           </div>
 
@@ -74,9 +75,9 @@ const ProductDetails = () => {
               </p>
             </div>
             <div className="flex gap-4 mt-8">
-              <Button type="primary" size="large" className="rounded-lg">
+              {/* <Button type="primary" size="large" className="rounded-lg">
                 Add to Cart
-              </Button>
+              </Button> */}
               <Button
                 type="default"
                 size="large"
@@ -134,9 +135,9 @@ const ProductDetails = () => {
                   >
                     View Details
                   </Button>
-                  <Button type="default" className="rounded-lg">
+                  {/* <Button type="default" className="rounded-lg">
                     Add to Cart
-                  </Button>
+                  </Button> */}
                 </div>
               </Card>
             ))}

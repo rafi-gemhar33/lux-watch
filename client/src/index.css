@@ -1106,3 +1106,19 @@ cart-mt-20 {
   margin-top: 20px;
 }
 
+.margin-30 {
+  margin-top: 60px !important;
+  margin-bottom: 60px !important;
+}
+
+.align-start{
+  align-items: start !important;
+}
+
+.padding-right-40{
+  padding-right: 40px;
+}
+
+.max-height-prod{
+  max-height: 300px;
+}
