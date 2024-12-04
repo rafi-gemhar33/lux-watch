@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { Row, Col, Card, Table, Tag, Typography, Empty } from "antd";
 import UserMenu from "../../components/Layout/UserMenu";
-import Layout from "./../../components/Layout/Layout";
+import Layout from "../../components/Layout/Layout";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
 
+const { Title, Text } = Typography;
+
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
+
+  // Fetch orders
   const getOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/auth/orders");
@@ -20,65 +25,111 @@ const Orders = () => {
   useEffect(() => {
     if (auth?.token) getOrders();
   }, [auth?.token]);
+
+  // Define table columns
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      render: (_, __, index) => index + 1,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status) => (
+        <Tag color={status === "Delivered" ? "green" : "volcano"}>{status}</Tag>
+      ),
+    },
+
+    {
+      title: "Date",
+      dataIndex: "createAt",
+      render: (date) => moment(date).fromNow(),
+    },
+    {
+      title: "Payment",
+      dataIndex: ["payment", "success"],
+      render: (success) => (
+        <Tag color={success ? "red" : "green"}>
+          {success ? "Failed" : "Success"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Quantity",
+      dataIndex: "products",
+      render: (products) => products.length,
+    },
+  ];
+
   return (
-    <Layout title={"Your Orders"}>
-      <div className="container-flui p-3 m-3 dashboard">
-        <div className="row">
-          <div className="col-md-3">
+    <Layout title="Your Orders">
+      <div className="container-fluid p-3 m-3 dashboard">
+        <Row gutter={[20, 20]}>
+          <Col span={6}>
             <UserMenu />
-          </div>
-          <div className="col-md-9">
-            <h1 className="text-center">All Orders</h1>
-            {orders?.map((o, i) => {
-              return (
-                <div className="border shadow">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Buyer</th>
-                        <th scope="col"> date</th>
-                        <th scope="col">Payment</th>
-                        <th scope="col">Quantity</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{i + 1}</td>
-                        <td>{o?.status}</td>
-                        <td>{o?.buyer?.name}</td>
-                        <td>{moment(o?.createAt).fromNow()}</td>
-                        <td>{o?.payment.success ? "Success" : "Failed"}</td>
-                        <td>{o?.products?.length}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div className="container">
-                    {o?.products?.map((p, i) => (
-                      <div className="row mb-2 p-3 card flex-row" key={p._id}>
-                        <div className="col-md-4">
-                          <img
-                            src={`/api/v1/product/product-photo/${p._id}`}
-                            className="card-img-top"
-                            alt={p.name}
-                            width="100px"
-                            height={"100px"}
+          </Col>
+          <Col span={18}>
+            <Title level={2} className="text-center">
+              All Orders
+            </Title>
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <Card
+                  key={order._id}
+                  style={{ marginBottom: 20 }}
+                  title={`Order #${order._id}`}
+                  bordered={false}
+                  extra={<Text>{moment(order.createAt).fromNow()}</Text>}
+                >
+                  <Table
+                    dataSource={[order]}
+                    columns={columns}
+                    rowKey="_id"
+                    pagination={false}
+                  />
+                  <Title level={5} style={{ marginTop: 20 }}>
+                    Products
+                  </Title>
+                  <Row gutter={[16, 16]}>
+                    {order.products.map((product) => (
+                      <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
+                        <Card
+                          hoverable
+                          cover={
+                            <img
+                              src={`/api/v1/product/product-photo/${product._id}`}
+                              alt={product.name}
+                              style={{
+                                height: "150px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          }
+                        >
+                          <Card.Meta
+                            title={product.name}
+                            description={
+                              <>
+                                <Text>
+                                  {product.description.substring(0, 30)}...
+                                </Text>
+                                <br />
+                                <Text strong>Price: ${product.price}</Text>
+                              </>
+                            }
                           />
-                        </div>
-                        <div className="col-md-8">
-                          <p>{p.name}</p>
-                          <p>{p.description.substring(0, 30)}</p>
-                          <p>Price : {p.price}</p>
-                        </div>
-                      </div>
+                        </Card>
+                      </Col>
                     ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                  </Row>
+                </Card>
+              ))
+            ) : (
+              <Empty />
+            )}
+          </Col>
+        </Row>
       </div>
     </Layout>
   );

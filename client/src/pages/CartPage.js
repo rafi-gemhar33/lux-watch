@@ -5,7 +5,18 @@ import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
 import DropIn from "braintree-web-drop-in-react";
 import axios from "axios";
-import { Button, Card, Col, Row, Typography, notification } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Typography,
+  Space,
+  Empty,
+  Divider,
+  notification,
+  Spin,
+} from "antd";
 
 const { Title, Text } = Typography;
 
@@ -17,7 +28,7 @@ const CartPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Total price calculation
+  // Calculate total price
   const totalPrice = () => {
     return cart
       .reduce((total, item) => total + item.price, 0)
@@ -27,14 +38,14 @@ const CartPage = () => {
       });
   };
 
-  // Remove item from the cart
+  // Remove item from cart
   const removeCartItem = (pid) => {
     const updatedCart = cart.filter((item) => item._id !== pid);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Get the payment gateway token
+  // Fetch Braintree client token
   const getToken = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/braintree/token");
@@ -48,7 +59,7 @@ const CartPage = () => {
     getToken();
   }, [auth?.token]);
 
-  // Handle payment
+  // Handle payment process
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -60,11 +71,11 @@ const CartPage = () => {
       setLoading(false);
       localStorage.removeItem("cart");
       setCart([]);
-      navigate("/dashboard/user/orders");
       notification.success({
         message: "Payment Completed",
         description: "Your payment was successful!",
       });
+      navigate("/dashboard/user/orders");
     } catch (error) {
       setLoading(false);
       notification.error({
@@ -77,124 +88,151 @@ const CartPage = () => {
 
   return (
     <Layout>
-      <div className="container">
-        <Row gutter={[16, 16]}>
-          <Col span={24}>
-            <Title level={2} className="text-center">
-              Hello {auth?.token && auth?.user?.name}
-            </Title>
-            <Text className="text-center">
-              {cart.length
-                ? `You have ${cart.length} items in your cart`
-                : "Your cart is empty"}
-            </Text>
-          </Col>
+      <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
+        <Title level={2} style={{ textAlign: "center", marginBottom: "1rem" }}>
+          Hello, {auth?.user?.name || "Guest"}
+        </Title>
+        <Text
+          style={{
+            display: "block",
+            textAlign: "center",
+            marginBottom: "2rem",
+          }}
+        >
+          {cart.length > 0
+            ? `You have ${cart.length} items in your cart.`
+            : "Your cart is currently empty."}
+        </Text>
 
-          <Col xs={24} md={16}>
-            {cart.map((product) => (
+        {cart.length === 0 ? (
+          <Empty
+            description="No items in your cart"
+            style={{ marginTop: "2rem" }}
+          />
+        ) : (
+          <Row gutter={[16, 16]} justify="center">
+            {/* Cart Items */}
+            <Col xs={24} md={16}>
+              {cart.map((product) => (
+                <Card
+                  key={product._id}
+                  hoverable
+                  style={{
+                    marginBottom: "1rem",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                  }}
+                  actions={[
+                    <Button
+                      danger
+                      style={{ width: "150px", marginLeft: "500px" }}
+                      onClick={() => removeCartItem(product._id)}
+                    >
+                      Remove
+                    </Button>,
+                  ]}
+                >
+                  <Row align="middle" gutter={[16, 0]}>
+                    {/* Small Product Image */}
+                    <Col flex="40px">
+                      <img
+                        src={`/api/v1/product/product-photo/${product._id}`}
+                        alt={product.name}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                          border: "1px solid #f0f0f0",
+                        }}
+                      />
+                    </Col>
+                    {/* Product Details */}
+                    <Col flex="auto">
+                      <Title level={4} style={{ margin: 0 }}>
+                        {product.name}
+                      </Title>
+                      <Text type="secondary">
+                        {product.description.substring(0, 50)}...
+                      </Text>
+                      <div style={{ marginTop: "0.5rem", fontWeight: "bold" }}>
+                        Price: {product.price}
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              ))}
+            </Col>
+
+            {/* Cart Summary */}
+            <Col xs={24} md={8}>
               <Card
-                key={product._id}
-                hoverable
-                className="mb-3"
-                cover={
-                  <img
-                    alt={product.name}
-                    src={`/api/v1/product/product-photo/${product._id}`}
-                    style={{ height: "150px", objectFit: "cover" }}
-                  />
-                }
-                actions={[
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => removeCartItem(product._id)}
-                    style={{ width: "100%" }}
-                  >
-                    Remove
-                  </Button>,
-                ]}
+                title="Cart Summary"
                 style={{
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "10px",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <Title level={4}>{product.name}</Title>
-                <Text>{product.description.substring(0, 30)}...</Text>
-                <p style={{ fontWeight: "bold" }}>Price: {product.price}</p>
-              </Card>
-            ))}
-          </Col>
-
-          <Col xs={24} md={8}>
-            <Card
-              title="Cart Summary"
-              bordered
-              style={{
-                borderRadius: "8px",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Text style={{ fontSize: "18px", fontWeight: "bold" }}>
-                Total: {totalPrice()}
-              </Text>
-              <div className="mt-3">
-                {auth?.user?.address ? (
-                  <>
-                    <Title level={5}>Current Address</Title>
-                    <Text>{auth?.user?.address}</Text>
+                <Space direction="vertical" style={{ width: "100%" }}>
+                  <Text style={{ fontSize: "18px", fontWeight: "bold" }}>
+                    Total: {totalPrice()}
+                  </Text>
+                  <Divider />
+                  {auth?.user?.address ? (
+                    <>
+                      <Text>Shipping Address: {auth?.user?.address}</Text>
+                      <Button
+                        type="link"
+                        onClick={() => navigate("/dashboard/user/profile")}
+                      >
+                        Update Address
+                      </Button>
+                    </>
+                  ) : (
                     <Button
                       type="link"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                      style={{ padding: 0 }}
+                      onClick={() =>
+                        navigate(
+                          auth?.token ? "/dashboard/user/profile" : "/login",
+                          {
+                            state: "/cart",
+                          }
+                        )
+                      }
                     >
-                      Update Address
+                      {auth?.token
+                        ? "Add Shipping Address"
+                        : "Log in to proceed"}
                     </Button>
-                  </>
-                ) : (
-                  <Button
-                    type="link"
-                    onClick={() =>
-                      navigate(
-                        auth?.token ? "/dashboard/user/profile" : "/login",
-                        {
-                          state: "/cart",
-                        }
-                      )
-                    }
-                  >
-                    {auth?.token
-                      ? "Update Address"
-                      : "Please log in to checkout"}
-                  </Button>
-                )}
-              </div>
+                  )}
+                </Space>
 
-              {clientToken && cart.length > 0 && (
-                <div className="mt-4">
-                  <DropIn
-                    options={{
-                      authorization: clientToken,
-                      paypal: {
-                        flow: "vault",
-                      },
-                    }}
-                    onInstance={(instance) => setInstance(instance)}
-                  />
-                  <Button
-                    type="primary"
-                    block
-                    onClick={handlePayment}
-                    loading={loading}
-                    disabled={!instance || !auth?.user?.address}
-                    style={{ borderRadius: "8px" }}
-                  >
-                    {loading ? "Processing..." : "Make Payment"}
-                  </Button>
-                </div>
-              )}
-            </Card>
-          </Col>
-        </Row>
+                {/* Payment Section */}
+                {clientToken && cart.length > 0 && (
+                  <div style={{ marginTop: "2rem" }}>
+                    <DropIn
+                      options={{
+                        authorization: clientToken,
+                        paypal: { flow: "vault" },
+                      }}
+                      onInstance={(instance) => setInstance(instance)}
+                    />
+                    <Button
+                      type="primary"
+                      block
+                      onClick={handlePayment}
+                      loading={loading}
+                      disabled={!instance || !auth?.user?.address}
+                      style={{ marginTop: "1rem", borderRadius: "8px" }}
+                    >
+                      {loading ? <Spin /> : "Make Payment"}
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            </Col>
+          </Row>
+        )}
       </div>
     </Layout>
   );

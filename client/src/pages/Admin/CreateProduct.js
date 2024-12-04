@@ -72,11 +72,8 @@ const CreateProduct = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <Card
-              title="Create Product"
-              bordered={false}
-              className="product-form-card"
-            >
+            <h1 className="mb-4">Create Products</h1>
+            <Card>
               <div className="product-form">
                 <div className="mb-3">
                   <Select

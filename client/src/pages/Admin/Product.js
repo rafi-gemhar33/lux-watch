@@ -38,7 +38,7 @@ const Products = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1 className="text-center my-4">All Products List</h1>
+            <h1 className="mb-4">All Products</h1>
             {loading ? (
               <div
                 className="text-center"
@@ -62,7 +62,11 @@ const Products = () => {
                           <img
                             alt={p.name}
                             src={`/api/v1/product/product-photo/${p._id}`}
-                            style={{ objectFit: "cover", height: "200px", width: "100%" }}
+                            style={{
+                              objectFit: "cover",
+                              height: "200px",
+                              width: "100%",
+                            }}
                           />
                         </Link>
                       }

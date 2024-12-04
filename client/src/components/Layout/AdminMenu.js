@@ -39,11 +39,11 @@ const AdminMenu = () => {
             Orders
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="users" icon={<UserOutlined />}>
+        {/*<Menu.Item key="users" icon={<UserOutlined />}>
           <NavLink to="/dashboard/admin/users" className="admin-menu-link">
             Users
           </NavLink>
-        </Menu.Item>
+        </Menu.Item>*/}
       </Menu>
     </div>
   );

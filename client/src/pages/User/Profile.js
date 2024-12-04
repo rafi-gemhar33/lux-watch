@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from "react";
 import UserMenu from "../../components/Layout/UserMenu";
-import Layout from "./../../components/Layout/Layout";
+import Layout from "../../components/Layout/Layout";
 import { useAuth } from "../../context/auth";
 import { toast } from "sonner";
 import axios from "axios";
-const Profile = () => {
-  //context
-  const [auth, setAuth] = useAuth();
-  //state
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+import { Card, Form, Input, Button, Row, Col, Typography } from "antd";
 
-  //get user data
+const { Title } = Typography;
+
+const Profile = () => {
+  // context
+  const [auth, setAuth] = useAuth();
+  // state
+  const [form] = Form.useForm();
+
+  // get user data
   useEffect(() => {
     const { email, name, phone, address } = auth?.user;
-    setName(name);
-    setPhone(phone);
-    setEmail(email);
-    setAddress(address);
-  }, [auth?.user]);
+    form.setFieldsValue({
+      name,
+      email,
+      phone,
+      address,
+    });
+  }, [auth?.user, form]);
 
   // form function
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
     try {
+      const { name, email, password, phone, address } = values;
       const { data } = await axios.put("/api/v1/auth/profile", {
         name,
         email,
@@ -49,77 +51,84 @@ const Profile = () => {
       toast.error("Something went wrong");
     }
   };
+
   return (
     <Layout title={"Your Profile"}>
       <div className="container-fluid m-3 p-3">
-        <div className="row">
-          <div className="col-md-3">
+        <Row gutter={[16, 24]}>
+          {/* Sidebar Menu */}
+          <Col xs={24} md={6}>
             <UserMenu />
-          </div>
-          <div className="col-md-9">
-            <div className="form-container ">
-              <form onSubmit={handleSubmit}>
-                <h4 className="title">USER PROFILE</h4>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Name"
-                    autoFocus
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Email "
-                    disabled
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-control"
-                    id="exampleInputPassword1"
-                    placeholder="Enter Your Password"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Phone"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Address"
-                  />
-                </div>
+          </Col>
 
-                <button type="submit" className="btn btn-primary">
-                  UPDATE
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
+          {/* Profile Form */}
+          <Col xs={24} md={18}>
+            <Title level={2} className="text-center">
+              User Profile
+            </Title>
+            <Card
+              bordered={false}
+              className="card-shadow"
+              style={{ width: "1100px" }}
+            >
+              <Form
+                form={form}
+                layout="vertical"
+                onFinish={handleSubmit}
+                initialValues={{
+                  name: "",
+                  email: "",
+                  phone: "",
+                  address: "",
+                }}
+              >
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    { required: true, message: "Please enter your name!" },
+                  ]}
+                >
+                  <Input placeholder="Enter Your Name" />
+                </Form.Item>
+
+                <Form.Item label="Email" name="email">
+                  <Input disabled placeholder="Enter Your Email" />
+                </Form.Item>
+
+                <Form.Item label="Password" name="password">
+                  <Input.Password placeholder="Enter Your Password" />
+                </Form.Item>
+
+                <Form.Item
+                  label="Phone"
+                  name="phone"
+                  rules={[
+                    { required: true, message: "Please enter your phone!" },
+                  ]}
+                >
+                  <Input placeholder="Enter Your Phone" />
+                </Form.Item>
+
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  rules={[
+                    { required: true, message: "Please enter your address!" },
+                  ]}
+                >
+                  <Input placeholder="Enter Your Address" />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    Update Profile
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </Layout>
   );

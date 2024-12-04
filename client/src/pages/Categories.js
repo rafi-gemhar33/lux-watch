@@ -2,49 +2,71 @@ import React from "react";
 import { Link } from "react-router-dom";
 import useCategory from "../hooks/useCategory";
 import Layout from "../components/Layout/Layout";
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, Typography } from "antd";
+import { AppstoreOutlined } from "@ant-design/icons"; // Import the watch icon
+
+const { Title } = Typography;
 
 const Categories = () => {
   const categories = useCategory();
 
   return (
     <Layout title={"Categories"}>
-      {/* Parent container centered with flex */}
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="containerh">
+      {/* Parent container centered */}
+      <Row
+        justify="center"
+        align="middle"
+        style={{
+          marginLeft: "50px",
+          minHeight: "100vh",
+          backgroundColor: "#f5f5f5",
+          padding: "20px",
+          marginTop: "-20px",
+        }}
+      >
+        <Col span={20}>
           {/* Categories Cards Section */}
-          <Row gutter={[16, 16]} justify="center" align="middle">
+          <Row gutter={[24, 24]} justify="center">
             {categories.map((c) => (
-              <Col
-                xs={24}
-                sm={12}
-                md={8}
-                key={c._id}
-                className="flex justify-center"
-              >
+              <Col xs={24} sm={12} md={8} key={c._id}>
                 <Card
                   hoverable
+                  style={{
+                    width: "350px", // Increased width
+                    height: "180px", // Increased height
+                    borderRadius: "10px", // Add rounded corners
+                    overflow: "hidden", // Ensure content fits within
+                  }}
                   className="transition-all duration-300 ease-in-out transform hover:scale-105"
-                  cover={
-                    <div className="heading">
-                      <span className="text-xl font-semibold text-gray-700">
-                        {c.name}
-                      </span>
-                    </div>
-                  }
                 >
-                  <Link
-                    to={`/category/${c.slug}`}
-                    className="block text-center text-blue-600 font-semibold text-lg hover:text-blue-700 transition duration-200"
-                  >
-                    Explore
-                  </Link>
+                  <Row gutter={16} align="middle">
+                    {/* Icon Section */}
+                    <Col span={8} style={{ textAlign: "center" }}>
+                      <AppstoreOutlined
+                        style={{
+                          fontSize: "80px",
+                        }}
+                      />
+                    </Col>
+                    {/* Content Section */}
+                    <Col span={16}>
+                      <Title level={4} className="text-gray-700">
+                        {c.name}
+                      </Title>
+                      <Link
+                        to={`/category/${c.slug}`}
+                        className="block text-blue-600 font-semibold hover:text-blue-700 transition duration-200"
+                      >
+                        Explore
+                      </Link>
+                    </Col>
+                  </Row>
                 </Card>
               </Col>
             ))}
           </Row>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </Layout>
   );
 };
