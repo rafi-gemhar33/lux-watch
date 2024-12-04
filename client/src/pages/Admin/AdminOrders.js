@@ -136,6 +136,7 @@ const AdminOrders = () => {
                         border: "1px solid #f0f0f0",
                         borderRadius: "8px",
                         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        width: "100%", // Set width to 100% of the parent container
                       }}
                     >
                       <Table
